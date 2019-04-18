@@ -44,7 +44,7 @@ jobs:
         - npm install -g yarn
       install:
         - yarn install
-        - yarn run bs:android
+        - yarn run build:android
       before_script:
         - yarn run emulator:android:create
       script:
