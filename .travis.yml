@@ -4,12 +4,18 @@ notifications:
 dist: xenial
 node_js:
   - 10
+env:
+  global:
+    - ANDROID_PLATFORM_VERSION=9
+    - ANDROID_API_VERSION=28
+    - ANDROID_BUILD_TOOLS_VERSION=28.0.2
 cache: yarn
 jobs:
   include:
     - name: Unit tests
     - name: E2E tests (android)
       language: android
+      jdk: oraclejdk8
       before_cache:
         - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
         - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
@@ -19,20 +25,19 @@ jobs:
           - $HOME/.gradle/caches/
           - $HOME/.gradle/wrapper/
           - $HOME/.android/build-cache
+      android:
+        components:
+          - tools
+          - platform-tools
+          - build-tools-$ANDROID_BUILD_TOOLS_VERSION
+          - android-$ANDROID_API_LEVEL
+          - extra-google-google_play_services
+          - extra-google-m2repository
+          - extra-android-m2repository
+          - addon-google_apis-google-$ANDROID_API_LEVEL
+          - sys-img-x86-android-$ANDROID_API_LEVEL
       before_install:
         - openssl aes-256-cbc -K $encrypted_78b6aab41b54_key -iv $encrypted_78b6aab41b54_iv -in android/app/my-release-key.keystore.enc -out android/app/my-release-key.keystore -d
-        - yes | sdkmanager \
-          "tools" \
-          "platform-tools" \
-          "emulator" \
-          "build-tools;28.0.3" \
-          "system-images;android-28;google_apis_playstore;x86" \
-          "sources;android-28" \
-          "patcher;v4" \
-          "platforms;android-28" \
-          "extras;intel;Hardware_Accelerated_Execution_Manager" \
-          "extras;google;m2repository" \
-          "extras;android;m2repository"
       install:
         - yarn install
         - yarn run bs:android
