@@ -1,0 +1,46 @@
+language: node_js
+notifications:
+  email: false
+dist: xenial
+node_js:
+  - 10
+cache: yarn
+jobs:
+  include:
+    - name: Unit tests
+    - name: E2E tests (android)
+      language: android
+      android:
+        components:
+          - tools
+          - platform-tools
+          - emulator
+          - build-tools;28.0.3
+          - system-images;android-28;google_apis_playstore;x86
+          - sources;android-28
+          - patcher;v4
+          - platforms;android-28
+          - extras;intel;Hardware_Accelerated_Execution_Manager
+          - extras;google;m2repository
+          - extras;android;m2repository
+      before_cache:
+        - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+        - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+      cache:
+        yarn: true
+        directories:
+          - $HOME/.gradle/caches/
+          - $HOME/.gradle/wrapper/
+          - $HOME/.android/build-cache
+      before_install:
+        - openssl aes-256-cbc -K $encrypted_78b6aab41b54_key -iv $encrypted_78b6aab41b54_iv -in android/app/my-release-key.keystore.enc -out android/app/my-release-key.keystore -d
+      install:
+        - yarn install
+        - yarn run bs:android
+      before_script:
+        - yarn run emulator:android:create
+      script:
+        - yarn run e2e
+      after_script:
+        - yarn run poste2e # NOTE-RT: Make sure we kill things and clean up
+        - yarn run emulator:android:delete
