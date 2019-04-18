@@ -37,7 +37,7 @@ jobs:
           - addon-google_apis-google-$ANDROID_API_LEVEL
           - sys-img-x86-android-$ANDROID_API_LEVEL
       before_install:
-        - yes | sdkmanager "platforms;android-$ANDROID_API_VERSION"
+        - yes | $ANDROID_HOME/tools/bin/sdkmanager --licenses
         - openssl aes-256-cbc -K $encrypted_78b6aab41b54_key -iv $encrypted_78b6aab41b54_iv -in android/app/my-release-key.keystore.enc -out android/app/my-release-key.keystore -d
         - export NODE_VERSION=${TRAVIS_NODE_VERSION:=10}
         - nvm install $NODE_VERSION
