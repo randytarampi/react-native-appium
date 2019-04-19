@@ -29,15 +29,13 @@ jobs:
           - tools
           - platform-tools
           - build-tools-$ANDROID_BUILD_TOOLS_VERSION
-          - android-$ANDROID_API_LEVEL
+          - android-$ANDROID_API_VERSION
           - extra-google-google_play_services
           - extra-google-m2repository
           - extra-android-m2repository
-          - addon-google_apis-google-$ANDROID_API_LEVEL
-          - sys-img-x86-android-$ANDROID_API_LEVEL
+          - addon-google_apis-google-$ANDROID_API_VERSION
+          - sys-img-x86-android-$ANDROID_API_VERSION
       before_install:
-        - mkdir -p ${ANDROID_HOME}licenses
-        - echo -e "24333f8a63b6825ea9c5514f83c2829b004d1fee" >> ${ANDROID_HOME}licenses/android-sdk-license
         - openssl aes-256-cbc -K $encrypted_78b6aab41b54_key -iv $encrypted_78b6aab41b54_iv -in android/app/my-release-key.keystore.enc -out android/app/my-release-key.keystore -d
         - export NODE_VERSION=${TRAVIS_NODE_VERSION:=10}
         - nvm install $NODE_VERSION
@@ -46,9 +44,9 @@ jobs:
         - yarn install
         - yarn run build:android
       before_script:
-        - yarn run emulator:android:create
+        - echo no | android create avd -f -n $(node -p 'require("./package.json").name') -t android-$ANDROID_API_VERSION --abi x86 -c 128M # NOTE-RT: This should really be `yarn run emulator:android:create`
       script:
         - yarn run e2e
       after_script:
         - yarn run poste2e # NOTE-RT: Make sure we kill things and clean up
-        - yarn run emulator:android:delete
+        - android delete avd -n $(node -p 'require("./package.json").name') # NOTE-RT: This should really be `yarn run emulator:android:delete`
