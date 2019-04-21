@@ -29,6 +29,8 @@ jobs:
           - $HOME/.gradle/wrapper/
           - $HOME/.android/build-cache
       before_install:
+        - export ANDROID_HOME=~/android-sdk
+        - export ANDROID_SDK_ROOT=$ANDROID_HOME
         - |
           if [ $TRAVIS_OS_NAME == "linux" ]; then
             export DISPLAY=:99.0
@@ -62,8 +64,6 @@ jobs:
         - yarn install
         - npm run build:android
       before_script:
-        - export ANDROID_HOME=~/android-sdk
-        - export ANDROID_SDK_ROOT=$ANDROID_HOME
         - echo no | $ANDROID_HOME/tools/bin/avdmanager create avd -n $(node -p 'require("./package.json").name') -k "system-images;android-$ANDROID_EMULATOR_API_VERSION;google_apis;$ANDROID_EMULATOR_ABI" # NOTE-RT: This should really be `yarn run emulator:android:create`
         # NOTE-RT: The following here should really be `npm run pree2e`
         #  - EMU_DEBUG="-debug all -logcat *:e -verbose -show-kernel"
