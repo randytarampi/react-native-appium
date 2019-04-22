@@ -24,7 +24,7 @@ describe('Create Android session (wd)', () => {
     // Start the session
     await driver.init(deviceConfig)
       .setImplicitWaitTimeout(DEVICE_TIMEOUT)
-      .sleep(DEVICE_TIMEOUT);
+      .sleep(Math.min(DEVICE_TIMEOUT, 60 * 1000));
 
     console.info('[beforeAll] driver initialized %j', driver);
   });
