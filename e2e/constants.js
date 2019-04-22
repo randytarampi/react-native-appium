@@ -7,7 +7,7 @@ export const ANDROID_DEVICE_NAME = process.env.ANDROID_DEVICE_NAME || ANDROID_AV
 export const ANDROID_PLATFORM_VERSION = process.env.ANDROID_PLATFORM_VERSION;
 export const ANDROID_APPLICATION_PATH = process.env.ANDROID_APPLICATION_PATH || path.resolve(__dirname, '../android/app/build/outputs/apk/release/app-release.apk');
 
-export const DEVICE_TIMEOUT = process.env.DEVICE_TIMEOUT || 90 * 1000;
+export const DEVICE_TIMEOUT = process.env.DEVICE_TIMEOUT || 1.5 * 60 * 1000;
 
 export const IOS_DEVICE_NAME = process.env.IOS_DEVICE_NAME || 'iPhone SE';
 export const IOS_PLATFORM_VERSION = process.env.IOS_PLATFORM_VERSION || '12.1';
@@ -21,4 +21,4 @@ export const APPIUM_USER = process.env.APPIUM_USER;
 
 export const TARGET_PLATFORM = process.env.TARGET_PLATFORM || 'android';
 
-export const JEST_TIMEOUT = process.env.JEST_TIMEOUT || 180 * 1000;
+export const JEST_TIMEOUT = process.env.JEST_TIMEOUT || 3 * 60 * 1000;
