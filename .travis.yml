@@ -15,11 +15,11 @@ jobs:
   allow_failures:
     - script: ANDROID_PLATFORM_VERSION=$ANDROID_EMULATOR_PLATFORM_VERSION JEST_TIMEOUT=600000 DEVICE_TIMEOUT=300000 npm run appium:test
   include:
-    - name: Unit tests
-      language: node_js
+    - language: node_js
       node_js: 10
       cache: yarn
-    - name: E2E tests (android, local)
+    - stage: E2E
+      name: Android (local)
       sudo: required
       language: android
       jdk: oraclejdk8
