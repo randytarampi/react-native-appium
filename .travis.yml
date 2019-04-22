@@ -72,17 +72,16 @@ jobs:
       before_script:
         - echo no | $ANDROID_HOME/tools/bin/avdmanager create avd -n $(node -p 'require("./package.json").name') -k "system-images;android-$ANDROID_EMULATOR_API_VERSION;google_apis;$ANDROID_EMULATOR_ABI" # NOTE-RT: This should really be `yarn run emulator:android:create`
         # NOTE-RT: The following here should really be `npm run pree2e`
-        #  - EMU_DEBUG="-debug all -logcat *:e -verbose -show-kernel"
         - EMU_ADDITIONAL_OPTIONS="-no-boot-anim -no-audio -memory 2048"
         - EMU_PARAMS="-gpu off"
-        - $ANDROID_HOME/emulator/emulator -avd $(node -p 'require("./package.json").name') $EMU_PARAMS $EMU_ADDITIONAL_OPTIONS ${EMU_DEBUG} &  echo $! > /tmp/$(node -p 'require("./package.json").name').emulator.android.pid; echo "Started Android emulator (`cat /tmp/$(node -p 'require("./package.json").name').emulator.android.pid`) from /tmp/$(node -p 'require("./package.json").name').emulator.android.pid"
-        - ./bin/android-wait-for-emulator
-        - $ANDROID_HOME/platform-tools/adb devices
-        - $ANDROID_HOME/platform-tools/adb shell input keyevent 82 &
+#        - $ANDROID_HOME/emulator/emulator -avd $(node -p 'require("./package.json").name') $EMU_PARAMS $EMU_ADDITIONAL_OPTIONS ${EMU_DEBUG} &  echo $! > /tmp/$(node -p 'require("./package.json").name').emulator.android.pid; echo "Started Android emulator (`cat /tmp/$(node -p 'require("./package.json").name').emulator.android.pid`) from /tmp/$(node -p 'require("./package.json").name').emulator.android.pid"
+#        - ./bin/android-wait-for-emulator
+#        - $ANDROID_HOME/platform-tools/adb devices
+#        - $ANDROID_HOME/platform-tools/adb shell input keyevent 82 &
         - npm run appium:kill
         - npm run appium:start
       script:
-        - ANDROID_DEVICE_NAME=$(node -p 'require("./package.json").name') ANDROID_PLATFORM_VERSION=$ANDROID_EMULATOR_PLATFORM_VERSION JEST_TIMEOUT=600000 npm run appium:test
+        - ANDROID_PLATFORM_VERSION=$ANDROID_EMULATOR_PLATFORM_VERSION JEST_TIMEOUT=600000 ANDROID_AVD_NAME=$(node -p 'require("./package.json").name') ANDROID_AVD_ARGS="$EMU_PARAMS $EMU_ADDITIONAL_OPTIONS" npm run appium:test
       after_script:
         - npm run poste2e # NOTE-RT: Make sure we kill things and clean up
         - android delete avd -n $(node -p 'require("./package.json").name') # NOTE-RT: This should really be `npm run emulator:android:delete`
